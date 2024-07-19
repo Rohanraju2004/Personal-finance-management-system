@@ -19,20 +19,33 @@ document.addEventListener('DOMContentLoaded', function() {
         Others: 0
     };
 
+    let myPieChart;
+
     expenseForm.addEventListener('submit', function(event) {
         event.preventDefault();
         const description = document.getElementById('description').value;
         const amount = parseFloat(document.getElementById('amount').value);
         const category = document.getElementById('category').value;
-        addExpense(description, amount, category);
-        expenseForm.reset();
+
+        if (!isNaN(amount)) {
+            addExpense(description, amount, category);
+            expenseForm.reset();
+        } else {
+            alert("Please enter a valid number for the amount.");
+        }
     });
 
     budgetForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        totalBudget = parseFloat(document.getElementById('budget').value);
-        updateBudgetDisplay();
-        budgetForm.reset();
+        const budgetInput = parseFloat(document.getElementById('budget').value);
+
+        if (!isNaN(budgetInput)) {
+            totalBudget = budgetInput;
+            updateBudgetDisplay();
+            budgetForm.reset();
+        } else {
+            alert("Please enter a valid number for the budget.");
+        }
     });
 
     function addExpense(description, amount, category) {
@@ -62,10 +75,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 hoverBackgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0', '#9966ff']
             }]
         };
-        if (window.myPieChart) {
-            window.myPieChart.destroy();
+
+        if (myPieChart) {
+            myPieChart.destroy();
         }
-        window.myPieChart = new Chart(ctx, {
+
+        myPieChart = new Chart(ctx, {
             type: 'pie',
             data: data,
             options: {
